@@ -3,10 +3,11 @@ package com.example.cypress_test
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.cypress_test.album.entity.Album
 import com.example.cypress_test.album.ui.AlbumAdapter
 import com.example.cypress_test.album.ui.AlbumInfiniteScrollListener
+import com.example.cypress_test.album.ui.AlbumUiModel
 import com.example.cypress_test.core.ConnectionHandler
 import com.example.cypress_test.core.Injection
 import com.example.cypress_test.databinding.ActivityMainBinding
@@ -17,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
-    private val mainAdapter = ConcatAdapter()
+    private val albumAdapter: AlbumAdapter = AlbumAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,13 +35,12 @@ class MainActivity : AppCompatActivity() {
         viewModel.getAlbums()
             .onErrorReturn { listOf() }
             .subscribe {
-                val photoAdapter = PhotoAdapter()
-                val albumAdapter = AlbumAdapter(photoAdapter)
+            val albumUiModels= mapToAlbumUiModel(it)
                 runOnUiThread {
-                    mainAdapter.addAdapter(albumAdapter)
-                    albumAdapter.submitList(it)
+
+                albumAdapter.submitList(albumUiModels)
                 }
-                viewModel.getPhotosByAlbumIds(it) { flowable ->
+                viewModel.getPhotosByAlbumIds(albumUiModels) { flowable, photoAdapter ->
                     flowable
                         .subscribe { data ->
                             photoAdapter.submitData(lifecycle, data)
@@ -82,8 +82,15 @@ class MainActivity : AppCompatActivity() {
                 LinearLayoutManager.VERTICAL,
                 false
             )
-            adapter = mainAdapter
+            adapter = albumAdapter
         }
         getAlbums()
+    }
+
+    private fun mapToAlbumUiModel(albums: List<Album>) = albums.map {
+        AlbumUiModel(
+            it,
+            PhotoAdapter()
+        )
     }
 }

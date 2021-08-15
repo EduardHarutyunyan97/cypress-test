@@ -6,8 +6,10 @@ import androidx.paging.PagingData
 import androidx.paging.rxjava3.cachedIn
 import com.example.cypress_test.album.entity.Album
 import com.example.cypress_test.album.repository.AlbumRepository
+import com.example.cypress_test.album.ui.AlbumUiModel
 import com.example.cypress_test.photo.entity.Photo
 import com.example.cypress_test.photo.repository.PhotoRepository
+import com.example.cypress_test.photo.ui.PhotoAdapter
 import io.reactivex.rxjava3.core.Flowable
 
 class MainViewModel(
@@ -20,12 +22,13 @@ class MainViewModel(
     }
 
     fun getPhotosByAlbumIds(
-        list: List<Album>,
-        block: (Flowable<PagingData<Photo>>) -> Unit
+        list: List<AlbumUiModel>,
+        block: (Flowable<PagingData<Photo>>, PhotoAdapter) -> Unit
     ) {
-        for (item in list) {
+        list.forEach {
             block(
-                photoRepository.getPhotos(item.id).cachedIn(viewModelScope)
+                photoRepository.getPhotos(it.album.id).cachedIn(viewModelScope),
+                it.photoAdapter,
             )
         }
     }

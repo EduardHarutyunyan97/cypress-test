@@ -1,5 +1,6 @@
 package com.example.cypress_test.photo.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
