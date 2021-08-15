@@ -1,4 +1,4 @@
-package com.example.cypress_test.photo.ui
+package com.example.cypress_test
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,12 +15,18 @@ class MainViewModel(
     private val photoRepository: PhotoRepository
 ) : ViewModel() {
 
-    fun getAlbums(): Flowable<PagingData<Album>> {
-        return albumRepository.getAlbums().cachedIn(viewModelScope)
+    fun getAlbums(): Flowable<List<Album>> {
+        return albumRepository.getAlbums()
     }
 
-    fun getPhotos(albumId: Long): Flowable<PagingData<Photo>> {
-        return photoRepository.getPhotos(albumId).cachedIn(viewModelScope)
+    fun getPhotosByAlbumIds(
+        list: List<Album>,
+        block: (Flowable<PagingData<Photo>>) -> Unit
+    ) {
+        for (item in list) {
+            block(
+                photoRepository.getPhotos(item.id).cachedIn(viewModelScope)
+            )
+        }
     }
-
 }

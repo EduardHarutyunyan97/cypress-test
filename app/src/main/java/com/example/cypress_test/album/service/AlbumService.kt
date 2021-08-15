@@ -1,8 +1,7 @@
 package com.example.cypress_test.album.service
 
 import com.example.cypress_test.album.entity.Album
-import io.reactivex.rxjava3.core.Single
-import retrofit2.Response
+import io.reactivex.rxjava3.core.Flowable
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -11,5 +10,5 @@ interface AlbumService {
     fun getAlbums(
         @Query("userId") userId: Long = 1,
         @Query("_limit") limit: Int = 4
-    ): Single<List<Album>>
+    ): Flowable<List<Album>>
 }

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">cypress-test</string>
+    <string name="internet_connection_message">No internet connection</string>
 </resources>

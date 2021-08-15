@@ -15,6 +15,7 @@ class PhotoPagingSource(
         val position = params.key ?: 1
         return photoService.getPhotos(albumId)
             .subscribeOn(io())
+            .onErrorReturn { listOf() }
             .map { toLoadResult(it, position) }
     }
 
