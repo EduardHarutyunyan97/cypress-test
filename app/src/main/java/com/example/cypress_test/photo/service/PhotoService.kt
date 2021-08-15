@@ -10,6 +10,6 @@ interface PhotoService {
     @GET("photos/")
     fun getPhotos(
         @Query("albumId") albumId: Long,
-        @Query("_limit") limit: Int=3
-    ): Single<Response<List<Photo>>>
+        @Query("_limit") limit: Long = 3
+    ): Single<List<Photo>>
 }

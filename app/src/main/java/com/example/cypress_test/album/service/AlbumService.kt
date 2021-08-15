@@ -11,5 +11,5 @@ interface AlbumService {
     fun getAlbums(
         @Query("userId") userId: Long = 1,
         @Query("_limit") limit: Int = 4
-    ): Single<Response<List<Album>>>
+    ): Single<List<Album>>
 }
